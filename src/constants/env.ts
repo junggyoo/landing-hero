@@ -17,7 +17,9 @@ export type ClientEnv = z.infer<typeof clientEnvSchema>;
 
 if (!_clientEnv.success) {
 	console.error("환경 변수 검증 실패:", _clientEnv.error.flatten().fieldErrors);
-	throw new Error("환경 변수를 확인하세요.");
+	throw new Error(
+		"필수 환경 변수가 누락되었습니다. Vercel 배포라면 Settings > Environment Variables에서 NEXT_PUBLIC_SUPABASE_URL와 NEXT_PUBLIC_SUPABASE_ANON_KEY를 설정해주세요."
+	);
 }
 
 export const env: ClientEnv = _clientEnv.data;
