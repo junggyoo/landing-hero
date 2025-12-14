@@ -1,0 +1,141 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@utility container {
+	margin-inline: auto;
+	width: 100%;
+	padding-inline: 2rem;
+	@media (width >= 1400px) {
+		max-width: 1400px;
+	}
+}
+
+@theme {
+	--font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
+}
+
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--border, currentColor);
+	}
+}
+
+@layer base {
+	:root {
+		/* Color Palette */
+		--background: #0b0f19;
+		--foreground: #f9fafb;
+
+		--card: #1f2937;
+		--card-foreground: #f9fafb;
+
+		--popover: #1f2937; /* Using card color for popover as fallback since not specified */
+		--popover-foreground: #f9fafb;
+
+		--primary: #6d28d9;
+		--primary-foreground: #f5f3ff;
+
+		--secondary: #1f2937;
+		--secondary-foreground: #f9fafb;
+
+		--muted: #1f2937; /* Using secondary as muted fallback */
+		--muted-foreground: #9ca3af; /* Lighter gray for muted text */
+
+		--accent: #ec4899;
+		--accent-foreground: #ffffff;
+
+		--destructive: #ef4444; /* Standard Tailwind red */
+		--destructive-foreground: #fafafa;
+
+		--border: #374151;
+		--input: #4b5563;
+		--ring: #6d28d9; /* Matching primary */
+
+		--radius: 0.5rem;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply bg-background text-foreground font-sans font-light antialiased;
+		font-size: 16px;
+	}
+
+	h1 {
+		@apply font-bold;
+		font-size: 48px;
+	}
+
+	h2 {
+		@apply font-semibold;
+		font-size: 36px;
+	}
+
+	h3 {
+		@apply font-medium;
+		font-size: 24px;
+	}
+}
