@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { LOGIN_PATH, SIGNUP_PATH } from "@/constants/auth";
 
 export const Header = () => {
 	return (
@@ -27,8 +28,16 @@ export const Header = () => {
 				</nav>
 
 				<div className="flex items-center gap-4">
-					<div className="hidden md:block">
-						<Button size="sm">히어로 생성하기</Button>
+					<div className="hidden md:flex items-center gap-4">
+						<Link
+							href={LOGIN_PATH}
+							className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60"
+						>
+							로그인
+						</Link>
+						<Link href={SIGNUP_PATH}>
+							<Button size="sm">회원가입</Button>
+						</Link>
 					</div>
 					<button className="md:hidden">
 						<Menu className="h-6 w-6" />

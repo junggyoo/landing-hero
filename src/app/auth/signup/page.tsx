@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
-export default function LoginPage() {
+export default function SignupPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const { isAuthenticated } = useCurrentUser();
@@ -24,7 +24,7 @@ export default function LoginPage() {
 		}
 	}, [isAuthenticated, router, searchParams]);
 
-	const handleGoogleLogin = () => {
+	const handleGoogleSignup = () => {
 		window.location.href = "/api/auth/login/google";
 	};
 
@@ -36,16 +36,16 @@ export default function LoginPage() {
 		<div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
 			<Card className="w-full max-w-md">
 				<CardHeader className="space-y-1 text-center">
-					<CardTitle className="text-2xl font-bold">로그인</CardTitle>
+					<CardTitle className="text-2xl font-bold">회원가입</CardTitle>
 					<CardDescription>
-						Google 계정으로 간편하게 로그인하세요.
+						Google 계정으로 간편하게 회원가입하세요.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="grid gap-4">
 					<Button
 						variant="outline"
 						className="w-full"
-						onClick={handleGoogleLogin}
+						onClick={handleGoogleSignup}
 					>
 						<svg
 							className="mr-2 h-4 w-4"
@@ -62,7 +62,7 @@ export default function LoginPage() {
 								d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
 							></path>
 						</svg>
-						Google로 계속하기
+						Google로 회원가입
 					</Button>
 				</CardContent>
 			</Card>

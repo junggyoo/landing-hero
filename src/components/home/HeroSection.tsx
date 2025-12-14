@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SIGNUP_PATH } from "@/constants/auth";
 
 export const HeroSection = () => {
 	return (
@@ -16,7 +18,9 @@ export const HeroSection = () => {
 			</div>
 			<div className="flex w-full max-w-sm items-center space-x-2">
 				<Input type="email" placeholder="이메일을 입력하세요" />
-				<Button type="submit">지금 바로 시작하기</Button>
+				<Button type="submit" asChild>
+					<Link href={SIGNUP_PATH}>지금 바로 시작하기</Link>
+				</Button>
 			</div>
 		</section>
 	);
