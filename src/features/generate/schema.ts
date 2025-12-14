@@ -26,4 +26,14 @@ export const promptSchema = z.object({
 		),
 });
 
+export const promptCompletionResponseSchema = z.object({
+	original: z.string(),
+	suggestion: z.string(),
+	notes: z.string().optional(),
+});
+
+export type PromptCompletionResponse = z.infer<
+	typeof promptCompletionResponseSchema
+>;
+
 export type PromptFormValues = z.infer<typeof promptSchema>;

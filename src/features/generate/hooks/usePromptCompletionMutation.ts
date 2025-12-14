@@ -1,13 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
+import { PromptCompletionResponse } from "../schema";
 
-// TODO: T-005에서 실제 API 연동 구현 예정
 export const usePromptCompletionMutation = () => {
 	return useMutation({
-		mutationFn: async ({ prompt }: { prompt: string }) => {
-			// Mock API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			console.log("Submitting prompt:", prompt);
-			return { success: true };
+		mutationFn: async ({
+			prompt,
+		}: {
+			prompt: string;
+		}): Promise<PromptCompletionResponse> => {
+			const response = await fetch("/api/prompt/complete", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ prompt }),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				throw new Error(
+					errorData.error || "AI 자동 보완 중 오류가 발생했습니다."
+				);
+			}
+
+			return response.json();
 		},
 	});
 };

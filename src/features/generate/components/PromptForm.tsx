@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Wand2 } from "lucide-react";
@@ -8,13 +9,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { promptSchema, type PromptFormValues } from "../schema";
+import {
+	promptSchema,
+	type PromptFormValues,
+	type PromptCompletionResponse,
+} from "../schema";
 import { usePromptCompletionMutation } from "../hooks/usePromptCompletionMutation";
 import { HelpTooltip } from "./HelpTooltip";
 import { PromptExamples } from "./PromptExamples";
+import { SuggestionPanel } from "./SuggestionPanel";
 
 export function PromptForm() {
 	const { toast } = useToast();
+	const [suggestion, setSuggestion] = useState<PromptCompletionResponse | null>(
+		null
+	);
 	const { control, handleSubmit, formState, setValue, watch } =
 		useForm<PromptFormValues>({
 			resolver: zodResolver(promptSchema),
@@ -30,20 +39,37 @@ export function PromptForm() {
 
 	const onSubmit = (data: PromptFormValues) => {
 		mutate(data, {
-			onSuccess: () => {
+			onSuccess: (result) => {
+				setSuggestion(result);
 				toast({
-					title: "자동 보완 시작",
-					description: "AI가 히어로 섹션을 생성하고 있습니다.",
+					title: "AI 제안 생성 완료",
+					description: "개선된 프롬프트를 확인하고 적용해보세요.",
 				});
 			},
-			onError: () => {
+			onError: (error) => {
 				toast({
 					title: "오류 발생",
-					description: "요청을 처리하는 중 문제가 발생했습니다.",
+					description:
+						error.message || "요청을 처리하는 중 문제가 발생했습니다.",
 					variant: "destructive",
 				});
 			},
 		});
+	};
+
+	const handleAcceptSuggestion = () => {
+		if (suggestion) {
+			setValue("prompt", suggestion.suggestion, { shouldValidate: true });
+			setSuggestion(null);
+			toast({
+				title: "적용 완료",
+				description: "제안된 문구가 적용되었습니다.",
+			});
+		}
+	};
+
+	const handleRejectSuggestion = () => {
+		setSuggestion(null);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -80,6 +106,7 @@ export function PromptForm() {
 									)}
 									aria-invalid={!!fieldState.error}
 									onKeyDown={handleKeyDown}
+									disabled={isPending || !!suggestion}
 								/>
 								<div className="absolute bottom-3 right-3 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
 									<span
@@ -105,35 +132,49 @@ export function PromptForm() {
 					)}
 				/>
 
-				<PromptExamples
-					onSelect={(text) =>
-						setValue("prompt", text, { shouldValidate: true })
-					}
-				/>
+				{suggestion && (
+					<SuggestionPanel
+						original={suggestion.original}
+						suggestion={suggestion.suggestion}
+						notes={suggestion.notes}
+						onAccept={handleAcceptSuggestion}
+						onReject={handleRejectSuggestion}
+					/>
+				)}
 
-				<div className="flex justify-end pt-4">
-					<Button
-						type="submit"
-						size="lg"
-						className="w-full sm:w-auto font-semibold"
-						disabled={!formState.isValid || isPending}
-					>
-						{isPending ? (
-							<>
-								<Loader2 className="mr-2 h-5 w-5 animate-spin" />
-								생성 중...
-							</>
-						) : (
-							<>
-								<Wand2 className="mr-2 h-5 w-5" />
-								AI로 자동 보완하기
-								<span className="ml-2 text-xs opacity-70 font-normal hidden sm:inline-block">
-									(Cmd + Enter)
-								</span>
-							</>
-						)}
-					</Button>
-				</div>
+				{!suggestion && (
+					<>
+						<PromptExamples
+							onSelect={(text) =>
+								setValue("prompt", text, { shouldValidate: true })
+							}
+						/>
+
+						<div className="flex justify-end pt-4">
+							<Button
+								type="submit"
+								size="lg"
+								className="w-full sm:w-auto font-semibold"
+								disabled={!formState.isValid || isPending}
+							>
+								{isPending ? (
+									<>
+										<Loader2 className="mr-2 h-5 w-5 animate-spin" />
+										생성 중...
+									</>
+								) : (
+									<>
+										<Wand2 className="mr-2 h-5 w-5" />
+										AI로 자동 보완하기
+										<span className="ml-2 text-xs opacity-70 font-normal hidden sm:inline-block">
+											(Cmd + Enter)
+										</span>
+									</>
+								)}
+							</Button>
+						</div>
+					</>
+				)}
 			</form>
 		</div>
 	);
