@@ -38,23 +38,26 @@ export function PromptForm() {
 	const { mutate, isPending } = usePromptCompletionMutation();
 
 	const onSubmit = (data: PromptFormValues) => {
-		mutate(data, {
-			onSuccess: (result) => {
-				setSuggestion(result);
-				toast({
-					title: "AI 제안 생성 완료",
-					description: "개선된 프롬프트를 확인하고 적용해보세요.",
-				});
-			},
-			onError: (error) => {
-				toast({
-					title: "오류 발생",
-					description:
-						error.message || "요청을 처리하는 중 문제가 발생했습니다.",
-					variant: "destructive",
-				});
-			},
-		});
+		mutate(
+			{ prompt: data.prompt || "" },
+			{
+				onSuccess: (result) => {
+					setSuggestion(result);
+					toast({
+						title: "AI 제안 생성 완료",
+						description: "개선된 프롬프트를 확인하고 적용해보세요.",
+					});
+				},
+				onError: (error) => {
+					toast({
+						title: "오류 발생",
+						description:
+							error.message || "요청을 처리하는 중 문제가 발생했습니다.",
+						variant: "destructive",
+					});
+				},
+			}
+		);
 	};
 
 	const handleAcceptSuggestion = () => {
